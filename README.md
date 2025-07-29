@@ -19,67 +19,74 @@ Program ini merupakan implementasi struktur data untuk memanajemen tim dan pemai
 
 ## 🧱 Struktur Data
 
-### `class Pemain`
-Menyimpan informasi individual pemain seperti nama, role, dan agent yang digunakan.
+### `struct Pemain`
+Menyimpan data pemain dalam bentuk linked list: nama, role, agent.
 
 ```cpp
-class Pemain {
-    string nama;
-    string role;
-    string agent;
+struct Pemain {
+    string nama, role, agent;
+    Pemain *next = nullptr;
 };
 ```
 
-### `class Tim`
-Menyimpan nama tim dan daftar pemain menggunakan `vector<Pemain>`.
+### `struct Tim`
+Menyimpan nama tim, daftar pemain (linked list), ID, dan skor.
 
 ```cpp
-class Tim {
-    string nama;
-    vector<Pemain> daftarPemain;
+struct Tim {
+    int id;
+    string namaTim;
+    Pemain *daftarPemain = nullptr;
+    int skor = 0;
 };
 ```
 
-### `map<string, Tim> daftarTim`
-Menyimpan seluruh tim berdasarkan nama tim sebagai *key*. Memudahkan pencarian dan manipulasi data tim.
+### `struct Match`
+Struktur sederhana untuk menyimpan ID dua tim yang akan bertanding.
 
-### `queue<string> antrianPertandingan`
-Menyimpan antrian tim yang siap bertanding, dengan konsep FIFO (First In First Out).
+```cpp
+struct Match {
+    int idTimA, idTimB;
+};
+```
 
-### `vector<string> riwayatPertandingan`
-Menyimpan hasil pertandingan sebelumnya dalam format string untuk ditampilkan sebagai log riwayat.
+### Struktur Lain:
+- `vector<Tim> daftar;` → daftar semua tim yang dibuat
+- `vector<Match> matchDraft;` → draft pertandingan
+- `queue<Match> q;` → antrian pertandingan
+- `map<string, set<string>> grafPertemuan;` → riwayat pertemuan antar tim
 
 ---
 
 ## ⚙️ Fungsi Utama
 
-- **`tambahTim()`**  
-  Menambahkan data tim dan pemain ke dalam `daftarTim`.
+### 📌 Manajemen Tim
+- `tambahTim()` – Menambahkan tim baru ke daftar
+- `editTim()` – Mengubah nama tim
+- `hapusTim()` – Menghapus tim dan mengatur ulang ID
 
-- **`hapusTim()`**  
-  Menghapus tim tertentu dari `daftarTim`.
+### 📌 Manajemen Pemain
+- `TambahPemain(Tim&)` – Menambahkan pemain ke tim tertentu
+- `EditPemain(Tim&)` – Mengubah data pemain
+- `HapusPemain(Tim&)` – Menghapus pemain dari tim (linked list)
 
-- **`editTim()`**  
-  Mengubah nama tim atau data pemain dalam tim.
+### 📌 Antrian dan Pertandingan
+- `tambahMatchDraft()` – Menyusun pasangan pertandingan
+- `editMatchDraft()` – Mengedit pasangan tim dalam draft
+- `hapusMatchDraft()` – Menghapus match dari draft
+- `kirimDraftKeAntrian()` – Mengirim seluruh draft ke queue pertandingan
+- `jalankanDanRegisterMatch()` – Menjalankan match dan mencatat skor
 
-- **`masukkanAntrian()`**  
-  Menambahkan tim ke dalam `antrianPertandingan`.
+### 📌 Output dan Pencarian
+- `tampilkanTimDanPemain()` – Menampilkan semua tim dan pemainnya
+- `cariTimDanTampilkan()` – Mencari tim berdasarkan keyword
+- `tampilkanAntrianMatch()` – Menampilkan antrian pertandingan
+- `cetakGraf()` – Menampilkan riwayat pertemuan antar tim
 
-- **`simulasiPertandingan()`**  
-  Mengambil dua tim terdepan dari antrian dan menentukan pemenang secara acak, lalu menyimpan hasilnya ke `riwayatPertandingan`.
-
-- **`tampilkanSemuaTim()`**  
-  Menampilkan seluruh tim beserta daftar pemainnya.
-
-- **`tampilkanPemain()`**  
-  Menampilkan pemain dari tim tertentu.
-
-- **`tampilkanAntrian()`**  
-  Menampilkan daftar antrian tim yang akan bertanding.
-
-- **`tampilkanRiwayat()`**  
-  Menampilkan hasil-hasil pertandingan yang telah berlangsung.
-
+### 📌 Auto Generator (Fitur Testing)
+- `isiOtomatis8Tim()` – Generate 8 tim + pemain otomatis
+- `isiOtomatis4Match()` – Membuat 4 match otomatis dari 8 tim
+  
 ---
 
 ## 🛠️ Bahasa & Tools
